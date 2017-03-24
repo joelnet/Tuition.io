@@ -15,6 +15,8 @@ class StoreEmployee extends FormRequest
 
     public function rules()
     {
+        $isUpdate = $this->method() == 'PUT';
+
         return [
             'name' => 'required',
             'date_of_birth' => 'required|date',
@@ -24,7 +26,7 @@ class StoreEmployee extends FormRequest
             'state' => 'required',
             'postal_code' => 'required',
             'country' => 'required',
-            'email' => 'required|email|unique:employees',
+            'email' => 'required|email|unique:employees' . ($isUpdate ? ",$this->get('id')" : ''),
         ];
     }
 

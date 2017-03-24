@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Employee;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEmployee;
@@ -27,7 +26,8 @@ class EmployeeController extends Controller
 
     public function update(StoreEmployee $request, $id)
     {
-        abort(500, 'not implemented');
+        Employee::where('id', $id)->update($request->only(self::FIELDS));
+        abort(204);
     }
 
     public function destroy($id)
