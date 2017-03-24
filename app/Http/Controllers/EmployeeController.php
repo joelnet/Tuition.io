@@ -9,6 +9,8 @@ use App\Http\Requests\StoreEmployee;
 
 class EmployeeController extends Controller
 {
+    const FIELDS = ['name', 'email', 'date_of_birth', 'address1', 'address2', 'city', 'state', 'postal_code', 'country'];
+
     public function show($id)
     {
         $employee = Employee::find($id);
@@ -20,10 +22,6 @@ class EmployeeController extends Controller
 
     public function store(StoreEmployee $request)
     {
-        $employee = Employee::create($request->only(
-            'name', 'email', 'date_of_birth', 'address1', 'address2', 'city', 'state', 'postal_code', 'country'
-        ));
-
-        return response()->json(['employee' => $employee]);
+        return response()->json(['employee' => Employee::create($request->only(self::FIELDS))]);
     }
 }
