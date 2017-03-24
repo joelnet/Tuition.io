@@ -17,11 +17,22 @@ class EmployeeController extends Controller
 
         return $employee
             ? response()->json(['employee' => $employee])
-            : abort(404);
+            : response()->json(['message' => 'Not found'], 404);
     }
 
     public function store(StoreEmployee $request)
     {
         return response()->json(['employee' => Employee::create($request->only(self::FIELDS))]);
+    }
+
+    public function update(StoreEmployee $request, $id)
+    {
+        abort(500, 'not implemented');
+    }
+
+    public function destroy($id)
+    {
+        Employee::destroy($id);
+        abort(204);
     }
 }

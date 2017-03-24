@@ -18,5 +18,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::resource('employee', 'EmployeeController', ['only' => [
-    'show', 'store'
+    'show', 'store', 'update', 'destroy',
 ]]);
