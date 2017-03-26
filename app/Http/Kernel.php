@@ -37,6 +37,13 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
+            
+            /** Modifications to set authentication cookies with REST API.
+             *  http://stackoverflow.com/questions/34449770/laravel-session-store-not-set-on-request
+             */
+            \App\Http\Middleware\EncryptCookies::class,
+            \Illuminate\Session\Middleware\StartSession::class,
+
             'throttle:60,1',
             'bindings',
         ],

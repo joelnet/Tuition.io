@@ -13,10 +13,12 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::resource('employee', 'EmployeeController', ['only' => [
     'show', 'store', 'update', 'destroy',
 ]]);
+
+Route::group(['prefix' => 'user'], function ()
+{
+    Route::post('login', 'AuthenticationController@login');
+    Route::post('logout', 'AuthenticationController@logout');
+});
