@@ -9,7 +9,7 @@ class AddressValidator
 {
     public static function validate($validator, $address)
     {
-        $validator->after(function() use ($validator, $address)
+        return $validator->after(function() use ($validator, $address)
         {
             $key = env('GOOGLE_MAP_API_KEY');
             $encodedAddress = urlencode("$address->address1, $address->address2, $address->city, $address->state $address->postal_code");
@@ -20,7 +20,5 @@ class AddressValidator
                 $validator->errors()->add('address', 'The address is not a valid USPS address.');
             }
         });
-
-        return $validator;
     }
 }
