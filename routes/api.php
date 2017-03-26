@@ -13,9 +13,11 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::resource('employee', 'EmployeeController', ['only' => [
-    'show', 'store', 'update', 'destroy',
-]]);
+Route::resource('employee', 'EmployeeController',
+    [
+        'middleware' => 'App\Http\Middleware\RestAuth',
+        'only' => ['show', 'store', 'update', 'destroy']
+    ]);
 
 Route::group(['prefix' => 'user'], function ()
 {
