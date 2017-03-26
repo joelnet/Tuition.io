@@ -28,7 +28,7 @@ class StoreEmployee extends FormRequest
             'state' => 'required',
             'postal_code' => 'required',
             'country' => 'required',
-            'email' => 'required|email|unique:employees' . ($this->isUpdate ? ",$this->get('id')" : ''),
+            'email' => 'required|email|unique:employees' . ($this->isUpdate() ? ",$this->get('id')" : ''),
         ];
     }
 

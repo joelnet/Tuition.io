@@ -2,17 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Employee;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEmployee;
+use App\Repositories\EmployeeRepositoryInterface;
 
 class EmployeeController extends Controller
 {
-    const FIELDS = ['name', 'email', 'date_of_birth', 'address1', 'address2', 'city', 'state', 'postal_code', 'country'];
+    private $repository;
+
+    public function __construct(EmployeeRepositoryInterface $repository)
+    {
+        $this->repository = $repository;
+    }
 
     public function show($id)
     {
-        $employee = Employee::find($id);
+        $employee = $this->repository->find($id);
 
         return $employee
             ? response()->json(['employee' => $employee])
@@ -21,18 +26,22 @@ class EmployeeController extends Controller
 
     public function store(StoreEmployee $request)
     {
-        return response()->json(['employee' => Employee::create($request->only(self::FIELDS))]);
+        $data = $request->only($this->repository->getFields());
+
+        return response()->json(['employee' => $this->repository->create($data)]);
     }
 
     public function update(StoreEmployee $request, $id)
     {
-        Employee::where('id', $id)->update($request->only(self::FIELDS));
+        $data = $request->only($this->repository->getFields());
+
+        $this->repository->update($data, $id);
         abort(204);
     }
 
     public function destroy($id)
     {
-        Employee::destroy($id);
+        $this->repository->destroy($id);
         abort(204);
     }
 }
