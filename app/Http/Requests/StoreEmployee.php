@@ -8,8 +8,11 @@ use Illuminate\Http\JsonResponse;
 
 class StoreEmployee extends FormRequest
 {
-    private function isUpdate() {
-        return $this->method() == 'PUT';
+    private function ifUpdateAppendId(string $data)
+    {
+        return $this->method() == 'PUT'
+            ? "$data,$this->get('id')"
+            : $data;
     }
 
     public function authorize()
@@ -28,7 +31,7 @@ class StoreEmployee extends FormRequest
             'state' => 'required',
             'postal_code' => 'required',
             'country' => 'required',
-            'email' => 'required|email|unique:employees' . ($this->isUpdate() ? ",$this->get('id')" : ''),
+            'email' => $this->ifUpdateAppendId('required|email|unique:employees'),
         ];
     }
 
