@@ -36,7 +36,11 @@ class CreateAdmin extends Command
             return print(implode("\n", $validator->errors()->all()) . "\n");
         }
 
-        $this->repository->store($this->arguments());
+        $this->repository->store([
+            'email'    => $this->argument('email'),
+            'password' => bcrypt($this->argument('password')),
+        ]);
+
         print("user " . $this->argument('email') . " created.\n");
     }
 }
