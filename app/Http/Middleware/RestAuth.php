@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class RestAuth
 {
@@ -26,6 +27,6 @@ class RestAuth
     {
         return $this->auth->check()
             ? $next($request)
-            : response()->json(['error' => 'Unauthorized'], 401);
+            : response()->json(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEmployee;
 use App\Repositories\EmployeeRepositoryInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class EmployeeController extends Controller
 {
@@ -21,7 +22,7 @@ class EmployeeController extends Controller
 
         return $employee
             ? response()->json(['employee' => $employee])
-            : response()->json(['message' => 'Not found'], 404);
+            : response()->json(['message' => 'Not found'], Response::HTTP_NOT_FOUND);
     }
 
     public function store(StoreEmployee $request)
@@ -36,12 +37,14 @@ class EmployeeController extends Controller
         $data = $request->only($this->repository->getFields());
 
         $this->repository->update($data, $id);
-        abort(204);
+
+        return abort(Response::HTTP_NO_CONTENT);
     }
 
     public function destroy($id)
     {
         $this->repository->destroy($id);
-        abort(204);
+
+        return abort(Response::HTTP_NO_CONTENT);
     }
 }

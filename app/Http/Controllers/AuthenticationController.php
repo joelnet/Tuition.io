@@ -6,6 +6,7 @@ use App\Http\Requests\StoreLogin;
 use Illuminate\Auth\AuthManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthenticationController extends Controller
 {
@@ -27,6 +28,6 @@ class AuthenticationController extends Controller
     {
         $this->auth->logout();
 
-        return abort(204);
+        return abort(Response::HTTP_NO_CONTENT);
     }
 }

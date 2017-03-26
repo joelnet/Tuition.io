@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Validators\AddressValidator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class StoreEmployee extends FormRequest
 {
@@ -37,7 +38,7 @@ class StoreEmployee extends FormRequest
 
     public function response(array $errors)
     {
-        return new JsonResponse($errors, 422);
+        return new JsonResponse($errors, Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function withValidator($validator)
