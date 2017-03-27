@@ -15,4 +15,6 @@ interface EmployeeRepositoryInterface
     public function update(array $data, int $id);
 
     public function destroy(int $id);
+
+    public function all();
 }

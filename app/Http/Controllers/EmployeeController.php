@@ -47,4 +47,9 @@ class EmployeeController extends Controller
 
         return abort(Response::HTTP_NO_CONTENT);
     }
+
+    public function all()
+    {
+        return $this->repository->all();
+    }
 }

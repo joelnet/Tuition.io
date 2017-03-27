@@ -19,9 +19,9 @@ class AuthenticationController extends Controller
 
     public function login(StoreLogin $request)
     {
-        $success = $this->auth->attempt(['email' => $request->username, 'password' => $request->password]);
-
-        return response()->json(['success' => $success]);
+        $this->auth->attempt(['email' => $request->username, 'password' => $request->password]);
+        
+        return $this->check($request);
     }
 
     public function logout(Request $request)
@@ -29,5 +29,16 @@ class AuthenticationController extends Controller
         $this->auth->logout();
 
         return abort(Response::HTTP_NO_CONTENT);
+    }
+
+    public function check(Request $request)
+    {
+        $authenticated = $this->auth->check();
+        $data = ['authenticated' => $authenticated];
+
+        return response()->json(
+            $authenticated
+                ? array_merge($data, ['username' => $this->auth->user()->name])
+                : $data);
     }
 }

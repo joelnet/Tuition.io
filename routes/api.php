@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 |
 */
 
+Route::get('employee/all', 'EmployeeController@all');
+
 Route::resource('employee', 'EmployeeController',
     [
         'middleware' => 'App\Http\Middleware\RestAuth',
@@ -23,4 +25,5 @@ Route::group(['prefix' => 'user'], function ()
 {
     Route::post('login', 'AuthenticationController@login');
     Route::post('logout', 'AuthenticationController@logout');
+    Route::post('check', 'AuthenticationController@check');
 });

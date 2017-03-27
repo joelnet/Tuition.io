@@ -32,4 +32,10 @@ class EmployeeRepository implements EmployeeRepositoryInterface
     {
         return Employee::destroy($id);
     }
+
+    // TODO: paging
+    public function all()
+    {
+        return Employee::all();
+    }
 }
