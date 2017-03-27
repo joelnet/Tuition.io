@@ -19,9 +19,11 @@ class AuthenticationController extends Controller
 
     public function login(StoreLogin $request)
     {
-        $this->auth->attempt(['email' => $request->username, 'password' => $request->password]);
-        
-        return $this->check($request);
+        $authenticated = $this->auth->attempt(['email' => $request->username, 'password' => $request->password]);
+
+        return $authenticated
+            ? response()->json(['authenticated' => true, 'username' => $this->auth->user()->name])
+            : response()->json(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
     }
 
     public function logout(Request $request)
