@@ -3,7 +3,6 @@
 // TODO: use es6 classes to organize into multiple files instead of one monolith.
 // TOOD: encapsulate axios in an api service.
 // TODO: convert Auth object to a VUEX object.
-// TODO: convert Employees object to a VUEX object.
 // TODO: highlight field with error message.
 // TODO: move error messages closer to the field with the errors.
 
