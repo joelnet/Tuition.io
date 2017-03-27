@@ -13,13 +13,14 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('employees', 'EmployeeController@all');
+Route::group(['middleware' => 'App\Http\Middleware\RestAuth'], function ()
+{
+    Route::get('employees', 'EmployeeController@all');
 
-Route::resource('employee', 'EmployeeController',
-    [
-        'middleware' => 'App\Http\Middleware\RestAuth',
-        'only' => ['show', 'store', 'update', 'destroy']
+    Route::resource('employees', 'EmployeeController', ['only' =>
+        ['show', 'store', 'update', 'destroy']
     ]);
+});
 
 Route::group(['prefix' => 'user'], function ()
 {
