@@ -50,6 +50,6 @@ class EmployeeController extends Controller
 
     public function all()
     {
-        return $this->repository->all();
+        return response()->json(['employees' => $this->repository->all()]);
     }
 }
