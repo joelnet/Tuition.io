@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('employee/all', 'EmployeeController@all');
+Route::get('employees', 'EmployeeController@all');
 
 Route::resource('employee', 'EmployeeController',
     [
