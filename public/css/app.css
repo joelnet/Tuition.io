@@ -2,6 +2,10 @@ body {
     padding-bottom: 50px;
 }
 
+h1 {
+    color: #337ab7;
+}
+
 .username {
     font-weight: bold;
 }

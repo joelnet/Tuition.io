@@ -25,7 +25,7 @@
                     <!-- use router-link component for navigation. -->
                     <!-- specify the link by passing the `to` prop. -->
                     <!-- <router-link> will be rendered as an `<a>` tag by default -->
-                    <router-link to="/">Employee List</router-link>
+                    <!--<router-link to="/">Employee List</router-link>-->
                 </p>
                 <!-- route outlet -->
                 <!-- component matched by the route will render here -->

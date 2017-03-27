@@ -4,6 +4,8 @@
 // TOOD: encapsulate axios in an api service.
 // TODO: convert Auth object to a VUEX object.
 // TODO: convert Employees object to a VUEX object.
+// TODO: highlight field with error message.
+// TODO: move error messages closer to the field with the errors.
 
 (function() {
 
@@ -26,16 +28,6 @@
         logout: function() {
             Auth.authenticated = false
             Auth.username = null
-        }
-    }
-
-    const Employees = {
-        items: [],
-        setEmployees: function(employees) {
-            this.items.map((x, i) => Vue.delete(Employees.items, i))
-            employees.map((x, i) => {
-                Vue.set(Employees.items, i, x)
-            })
         }
     }
 
@@ -71,16 +63,19 @@
                     </tbody>
                 </table>
 
+                <div>
+                    <router-link class="btn btn-primary" to="/employees/new">New Employee</router-link>
+                </div>
             </div>`,
         data: function() {
             return {
                 loaded: false,
-                employees: Employees.items
+                employees: []
             }
         },
         methods: {
             edit: function(employee) {
-                this.$router.push(`/employee/${employee.id}`)
+                this.$router.push(`/employees/${employee.id}`)
             }
         },
         mounted: function() {
@@ -88,18 +83,14 @@
             this.$http.get('/api/employees')
                 .then(response => {
                     this.loaded = true
-                    Employees.setEmployees(response.data.employees)
+                    this.employees = response.data.employees
                 })
         }
     }
-    const EmployeeEdit = {
+    const EmployeeNew = {
         template: `
-            <div v-if="employee">
-                <h2>Edit {{ employee.name }}</h2>
-                <div class="form-group">
-                    <label for="id">ID</label>
-                    <input v-model="employee.id" class="form-control" id="id" disabled>
-                </div>
+            <div>
+                <h2>New Employee</h2>
                 <div class="form-group">
                     <label for="name">Name</label>
                     <input v-model="employee.name" class="form-control" id="name" placeholder="Name">
@@ -138,46 +129,132 @@
                     <label for="country">Country</label>
                     <input v-model="employee.country" class="form-control" id="country" placeholder="Country">
                 </div>
-                <div class="form-group">
-                    <label for="country">Country</label>
-                    <input v-model="employee.country" class="form-control" id="country" placeholder="Country">
-                </div>
-                <div class="form-group">
-                    <label for="created_at">Created At</label>
-                    <input v-model="employee.created_at" class="form-control" id="created_at" placeholder="Created At" disabled>
-                </div>
-                <div class="form-group">
-                    <label for="updated_at">Update At</label>
-                    <input v-model="employee.updated_at" class="form-control" id="updated_at" placeholder="Update At" disabled>
-                </div>
                 <div>
                     <button v-on:click="save" class="btn btn-primary">Save</button>
-
-                    <!-- TODO: add delete confirmation -->
-                    <button v-on:click="remove" class="btn btn-default">Delete</button>
+                    
+                    <router-link to="/" class="btn btn-default">Close</router-link>
                 </div>
-                <div v-if="message">{{ message }}</div>
+                <div v-html="error" v-if="error" class="bg-danger errors"></div>
             </div>`,
         data: function() {
             return {
-                employee: null,
-                message: null
+                employee: {},
+                error: null
             }
         },
         methods: {
             save: function() {
                 this.message = null
-                this.$http.put(`/api/employee/${this.employee.id}`, this.employee)
+                this.error = null
+
+                this.$http.post(`/api/employees`, this.employee)
+                    .then(response => {
+                        this.$router.push(`/`)
+                    })
+                    .catch(err => {
+                        this.error = Object.keys(err.response.data)
+                            .map(key => `${key}: ${err.response.data[key]}`)
+                            .join('<br/>')
+                    })
+            }
+        }
+    }
+    const EmployeeEdit = {
+        template: `
+            <div>
+                <div v-if="!employee">
+                    loading...
+                </div>
+                <div v-if="employee">
+                    <h2>Edit {{ employee.name }}</h2>
+                    <div class="form-group">
+                        <label for="id">ID</label>
+                        <input v-model="employee.id" class="form-control" id="id" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input v-model="employee.name" class="form-control" id="name" placeholder="Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">E-Mail</label>
+                        <input v-model="employee.email" type="email" class="form-control" id="email" placeholder="E-Mail">
+                    </div>
+                    <!-- TODO: use Date Picker -->
+                    <!-- TODO: strip time off date -->
+                    <div class="form-group">
+                        <label for="date_of_birth">Birthdate</label>
+                        <input v-model="employee.date_of_birth" class="form-control" id="date_of_birth" placeholder="Birthdate">
+                    </div>
+                    <div class="form-group">
+                        <label for="address1">Address 1</label>
+                        <input v-model="employee.address1" class="form-control" id="address1" placeholder="Address 1">
+                    </div>
+                    <div class="form-group">
+                        <label for="address1">Address 2</label>
+                        <input v-model="employee.address2" class="form-control" id="address2" placeholder="Address 2">
+                    </div>
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input v-model="employee.city" class="form-control" id="city" placeholder="City">
+                    </div>
+                    <div class="form-group">
+                        <label for="state">State</label>
+                        <input v-model="employee.state" class="form-control" id="state" placeholder="State">
+                    </div>
+                    <div class="form-group">
+                        <label for="postal_code">Postal Code</label>
+                        <input v-model="employee.postal_code" class="form-control" id="postal_code" placeholder="Postal Code">
+                    </div>
+                    <div class="form-group">
+                        <label for="country">Country</label>
+                        <input v-model="employee.country" class="form-control" id="country" placeholder="Country">
+                    </div>
+                    <div class="form-group">
+                        <label for="created_at">Created At</label>
+                        <input v-model="employee.created_at" class="form-control" id="created_at" placeholder="Created At" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="updated_at">Update At</label>
+                        <input v-model="employee.updated_at" class="form-control" id="updated_at" placeholder="Update At" disabled>
+                    </div>
+                    <div>
+                        <button v-on:click="save" class="btn btn-primary">Save</button>
+
+                        <!-- TODO: add delete confirmation -->
+                        <button v-on:click="remove" class="btn btn-danger">Delete</button>
+                        
+                        <router-link to="/" class="btn btn-default">Cancel</router-link>
+                    </div>
+                    <div v-if="message">{{ message }}</div>
+                    <div v-html="error" v-if="error" class="bg-danger errors"></div>
+                </div>
+            </div>`,
+        data: function() {
+            return {
+                employee: null,
+                message: null,
+                error: null
+            }
+        },
+        methods: {
+            save: function() {
+                this.message = null
+                this.error = null
+
+                this.$http.put(`/api/employees/${this.employee.id}`, this.employee)
                     .then(response => {
                         this.message = 'Employee updated successfully'
                     })
                     .catch(err => {
-                        this.message = 'There was a problem updating the Employee'
+                        this.error = Object.keys(err.response.data)
+                            .map(key => `${key}: ${err.response.data[key]}`)
+                            .join('<br/>')
+
                     })
             },
             remove: function() {
                 this.message = null
-                this.$http.delete(`/api/employee/${this.employee.id}`)
+                this.$http.delete(`/api/employees/${this.employee.id}`)
                     .then(response => {
                         this.$router.push('/')
                     })
@@ -187,9 +264,12 @@
             }
         },
         mounted: function() {
-            const matchesId = propEq('id', parseInt(this.$route.params.id))
+            const id = this.$route.params.id
 
-            this.employee = Employees.items.filter(matchesId)[0]
+            this.$http.get(`/api/employees/${id}`)
+                .then(response => {
+                    this.employee = response.data.employee
+                })
         }
     }
     const Login = {
@@ -228,10 +308,7 @@
                     })
                     .then(response => {
                         Auth.login(response.data.username)
-                        console.log('push to /')
-                        setTimeout(function() {
-                            $router.push('/')
-                        }, 0);
+                        $router.push('/')
                     })
                     .catch(err => {
                         this.error = Object.keys(err.response.data)
@@ -239,9 +316,6 @@
                             .join('<br/>')
                     })
             }
-        },
-        mounted: function() {
-            Auth.logout()
         }
     }
     const Logout = {
@@ -262,7 +336,8 @@
     // We'll talk about nested routes later.
     const routes = [
         { path: '/', component: List, props: { auth: true } },
-        { path: '/employee/:id', component: EmployeeEdit, props: { auth: true } },
+        { path: '/employees/new', component: EmployeeNew, props: { auth: true } },
+        { path: '/employees/:id', component: EmployeeEdit, props: { auth: true } },
         { path: '/login', component: Login },
         { path: '/logout', component: Logout },
     ]
