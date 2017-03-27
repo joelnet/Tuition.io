@@ -12,7 +12,7 @@ class StoreEmployee extends FormRequest
     private function ifUpdateAppendId(string $data)
     {
         return $this->method() == 'PUT'
-            ? "$data,$this->get('id')"
+            ? "$data," . $this->route('employee')
             : $data;
     }
 
@@ -32,7 +32,7 @@ class StoreEmployee extends FormRequest
             'state' => 'required',
             'postal_code' => 'required',
             'country' => 'required',
-            'email' => $this->ifUpdateAppendId('required|email|unique:employees'),
+            'email' => $this->ifUpdateAppendId('required|email|unique:employees,email'),
         ];
     }
 
