@@ -24,6 +24,6 @@ class StoreLogin extends FormRequest
 
     public function response(array $errors)
     {
-        return new JsonResponse($errors, Response::HTTP_NO_CONTENT);
+        return new JsonResponse($errors, Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 }
