@@ -1,4 +1,4 @@
-# Tuition.io pre-employment project
+# Tuition.io
 
 ## Setup
 
